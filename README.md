@@ -25,3 +25,10 @@ The standard library ships `binascii.b2a_uu` / `a2b_uu` but leaves the `begin <m
 - Empty input encodes to a valid frame with no payload lines, and decodes back to empty bytes.
 - Non-ASCII bytes in the encoded text raise `UUencodeError` rather than silently mangling.
 - The decoder normalizes CRLF to LF before parsing, so text that transited a Windows mail system still decodes.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
